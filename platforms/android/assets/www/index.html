@@ -13,8 +13,8 @@
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
-        <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
         <style type="text/css">
           body {
                 padding: 0;
@@ -24,6 +24,22 @@
                 height: 100vh;
                 width: 100vw;
             }
+            a[href^="http://maps.google.com/maps"]{display:none !important}
+            a[href^="https://maps.google.com/maps"]{display:none !important}
+
+            .gmnoprint a, .gmnoprint span, .gm-style-cc {
+                display:none;
+            }
+            .gmnoprint div {
+                background:none !important;
+            }
+            .leaflet-map-pane {
+                z-index: 2 !important;
+            }
+
+            .leaflet-google-layer {
+                z-index: 1 !important;
+            }
         </style>
         <title>Hello World</title>
     </head>
@@ -31,22 +47,55 @@
         <div class="app">
             <div id="map"></div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <script>
-            L.mapbox.accessToken = 'pk.eyJ1IjoicGFyZW50Y2xhc3MiLCJhIjoiY2l5NXpjaGlqMDAyaDJ3bzZleTJxdGlwMCJ9.7n3T6Y1ZySM0TwkYyrepTg';
-            var map = L.mapbox.map('map')
-                .setView([14.659279, 120.986145], 18);
-            L.mapbox.styleLayer('mapbox://styles/parentclass/ciy7bbqny000v2rocq98b5hkg').addTo(map);
 
-            var bounds = [
-                            [14.659586, 120.984096],
-                            [14.659471, 120.987650]
-                        ];
+        var map, layer, newMarker, markerLoc;
 
-            map.setMaxBounds(bounds);
+        $(function(){
+
+             map = new L.Map('map',{zoomControl: false, attributionControl: false}).setView([14.659101, 120.986291], 18);
+             layer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 20,
+                minZoom: 18
+              }).addTo(map);
+
+            //newMarkerGroup = new L.LayerGroup();
+
+            map.addLayer(layer);
+
+            // MARKERS
+
+            var purpleIcon = new L.Icon({
+              iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            });
+
+            var poc = L.marker([14.66031, 120.98588],{icon:purpleIcon}).addTo(map);
+            var cgym = L.marker([14.66045,120.9863],{icon:purpleIcon}).addTo(map);
+            var gp = L.marker([14.65986,120.9861],{icon:purpleIcon}).addTo(map);
+            var pgt = L.marker([14.65922,120.98561],{icon:purpleIcon}).addTo(map);
+            var fdt_lrc = L.marker([14.65917,120.98638],{icon:purpleIcon}).addTo(map);
+            var gpl = L.marker([14.65898,120.98601],{icon:purpleIcon}).addTo(map);
+            var fdt = L.marker([14.65835, 120.98618],{icon:purpleIcon}).addTo(map);
+            var cbt = L.marker([14.65767, 120.98553],{icon:purpleIcon}).addTo(map);
+            var hs = L.marker([14.65945, 120.98607],{icon:purpleIcon}).addTo(map);
+            var hos = L.marker([14.65786, 120.9871],{icon:purpleIcon}).addTo(map);
+
             
-            map.touchZoom.disable();
-            map.zoomControl.remove();
+
+
+            map.on('click',checkCoord);
+        });
+        
+        //function addMarker(e){var newMarker = new L.marker(e.latlng).addTo(map);
+        //                        alert('Markings: ' + e.latlng);}
+        function checkCoord(e){alert(e.latlng);}
         </script>
     </body>
 </html>
