@@ -20,8 +20,8 @@ module.exports = [
 module.exports.metadata = 
 // TOP OF METADATA
 {
-    "cordova-plugin-whitelist": "1.3.0",
-    "cordova-plugin-dialogs": "1.3.1"
+    "cordova-plugin-dialogs": "1.3.1",
+    "cordova-plugin-whitelist": "1.3.0"
 }
 // BOTTOM OF METADATA
 });
