@@ -110,17 +110,19 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>
-                  <a class="navbar-brand" href="#">Manila Central University</a>
-                  <a class="navbar-brand text-right resetRoute" href="#" style="font-size:12px;" onclick="newRoute()">Select another route/s?</a></li>
+                  <a class="navbar-brand" href="index.html">Manila Central University</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">P2P Locator <span class="sr-only">(current)</span></a></li>
-                    <li><a href="history.html">Building History</a></li>
-                    <li><a href="overview.html">Overview of MCU</a></li>
-                    <li><a href="author.html">About Author</a></li>
+                    <li><a class="text-center resetRoute" href="#" style="font-size:12px;" onclick="newRoute()">Select another route/s?</a></li></li>
+                    <li role="separator" class="divider"></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="active"><a class="text-center" href="#">P2P Locator <span class="sr-only">(current)</span></a></li>
+                    <li><a class="text-center" href="history.html">Building History</a></li>
+                    <li><a class="text-center" href="overview.html">Overview of MCU</a></li>
+                    <li><a class="text-center" href="author.html">About Author</a></li>
                   </ul>
                 </div><!-- /.navbar-collapse -->
 
@@ -129,6 +131,7 @@
             </nav>
 
             <div id="map"></div>
+
         </div>
 
         <!-- Source: POC Modal -->
@@ -1614,7 +1617,7 @@
         </div>
 
         <!-- Destination: Admin Modal -->
-        <div class="modal fade" id="admin_source_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="admin_dest_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -1695,7 +1698,10 @@
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script type="text/javascript" src="cordova.js"></script>
-
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/GHUtil.js"></script>
+        <script type="text/javascript" src="js/GraphHopperRouting.js"></script>
+        <script type="text/javascript" src="js/togeojson.js"></script>
         <script>
         var map, layer, newMarker, markerLoc, source, destination;
         var poc, cgym, gp, pgt, fdt_lrc, fdt, cbt, hs, hos, admin;
@@ -1713,7 +1719,7 @@
                                         [14.659292, 120.983472], //South West
                                         [14.659336, 120.988412] //North East
                                     ]
-                            }).setView([14.659101, 120.986291], 17);
+                            }).setView([14.659101, 120.986291], 16);
 
              // layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
              //      maxZoom: 20,
@@ -1722,10 +1728,10 @@
              //      accessToken: 'pk.eyJ1IjoicGFyZW50Y2xhc3MiLCJhIjoiY2l5NXpjaGlqMDAyaDJ3bzZleTJxdGlwMCJ9.7n3T6Y1ZySM0TwkYyrepTg'
              //  }).addTo(map);
 
-             layer = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-                maxZoom: 21,
-                minZoom: 17
-              });
+             layer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 21,
+                        minZoom: 16
+                    });
 
 
             // MARKERS
@@ -1873,6 +1879,10 @@
         });
 
         //var poc, cgym, gp, pgt, fdt_lrc, fdt, cbt, hs, hos, admin;
+        var host;
+         var defaultKey = "5dffac29-a8a1-48ff-9098-40ae330ad940";
+         var profile = "foot";
+         var ghRouting = new GraphHopperRouting({key: defaultKey, host: host, vehicle: profile, elevation: false});
 
         function newRoute(){
           this.source = "";
@@ -1887,115 +1897,179 @@
           $(this.pgt._icon).removeClass('blinking');
           $(this.admin._icon).removeClass('blinking');
           $(this.hos._icon).removeClass('blinking');
+
+          clearRoutingLayer(this.ghRouting);
         }
 
         function blinkPOC(type){
+            var lat = 14.66031;
+            var lng = 120.98588;
+
             if(type=="source"){
                 $(this.poc._icon).addClass('blinking');
                 this.source = "14.66031, 120.98588";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
+
             }else if(type=="destination"){
                 $(this.poc._icon).addClass('blinking');
                 this.destination = "14.66031, 120.98588";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkCGYM(type){
+            var lat = 14.66045;
+            var lng = 120.9863;
+
             if(type=="source"){
                 $(this.cgym._icon).addClass('blinking');
                 this.source = "14.66045,120.9863";
-                alert(this.source);
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.cgym._icon).addClass('blinking');
                 this.destination = "14.66045,120.9863";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkGP(type){
+              var lat = 14.65986;
+              var lng = 120.9861;
+
             if(type=="source"){
                 $(this.gp._icon).addClass('blinking');
                 this.source = "14.65986,120.9861";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.gp._icon).addClass('blinking');
                 this.destination = "14.65986,120.9861";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkPGT(type){
-            if(type=="source"){
+            var lat = 14.65922;
+            var lng = 120.9861;
+
+            if(type=="source"){              
                 $(this.pgt._icon).addClass('blinking');
                 this.source = "14.65922,120.98561";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.pgt._icon).addClass('blinking');
                 this.destination = "14.65922,120.98561";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkFDT_LRC(type){
+            var lat = 14.65917;
+            var lng = 120.98638;
+
             if(type=="source"){
                 $(this.fdt_lrc._icon).addClass('blinking');
                 this.source = "14.65917,120.98638";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
+                
                 $(this.fdt_lrc._icon).addClass('blinking');
                 this.destination = "14.65917,120.98638";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkFDT(type){
+            var lat = 14.65835;
+            var lng = 120.98618;
+
             if(type=="source"){
+                
                 $(this.fdt._icon).addClass('blinking');
                 this.source = "14.65835, 120.98618";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.fdt._icon).addClass('blinking');
                 this.destination = "14.65835, 120.98618";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkCBT(type){
+            var lat = 14.65767;
+            var lng = 120.98553;
+
             if(type=="source"){
                 $(this.cbt._icon).addClass('blinking');
                 this.source = "14.65767, 120.98553";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.cbt._icon).addClass('blinking');
                 this.destination = "14.65767, 120.98553";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkHS(type){
+            var lat = 14.65945;
+            var lng = 120.98607;
+
             if(type=="source"){
                 $(this.hs._icon).addClass('blinking');
                 this.source = "14.65945, 120.98607";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.hs._icon).addClass('blinking');
                 this.destination = "14.65945, 120.98607";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkHOS(type){
+            var lat = 14.657655;
+            var lng = 120.986706;
+
             if(type=="source"){
                 $(this.hos._icon).addClass('blinking');
                 this.source = "14.657655,120.986706";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.hos._icon).addClass('blinking');
                 this.destination = "14.657655, 120.986706";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
         function blinkADMIN(type){
+            var lat = 14.657985;
+            var lng = 120.986717;
+
             if(type=="source"){
                 $(this.admin._icon).addClass('blinking');
                 this.source = "14.657985, 120.986717";
-                alert(this.source);
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }else if(type=="destination"){
                 $(this.admin._icon).addClass('blinking');
                 this.destination = "14.657985, 120.986717";
+
+                setupRoutingAPI(this.ghRouting,lat,lng);
             }
         }
 
