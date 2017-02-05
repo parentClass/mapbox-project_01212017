@@ -1721,17 +1721,17 @@
                                     ]
                             }).setView([14.659101, 120.986291], 16);
 
-             // layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-             //      maxZoom: 20,
-             //      minZoom: 18,
-             //      id: 'mapbox.streets',
-             //      accessToken: 'pk.eyJ1IjoicGFyZW50Y2xhc3MiLCJhIjoiY2l5NXpjaGlqMDAyaDJ3bzZleTJxdGlwMCJ9.7n3T6Y1ZySM0TwkYyrepTg'
-             //  }).addTo(map);
+             layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                  maxZoom: 20,
+                  minZoom: 16,
+                  id: 'mapbox.streets',
+                  accessToken: 'pk.eyJ1IjoicGFyZW50Y2xhc3MiLCJhIjoiY2l5NXpjaGlqMDAyaDJ3bzZleTJxdGlwMCJ9.7n3T6Y1ZySM0TwkYyrepTg'
+              }).addTo(map);
 
-             layer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 21,
-                        minZoom: 16
-                    });
+             // layer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+             //            maxZoom: 21,
+             //            minZoom: 16
+             //        });
 
 
             // MARKERS
